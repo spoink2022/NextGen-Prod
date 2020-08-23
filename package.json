@@ -1,0 +1,28 @@
+{
+  "name": "nextgen-prod",
+  "version": "1.0.0",
+  "description": "for real this time",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "12.3.1",
+    "pg": "8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx nodemon bot.js",
+    "prod": "node bot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spoink2022/NextGen-Prod.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/spoink2022/NextGen-Prod/issues"
+  },
+  "homepage": "https://github.com/spoink2022/NextGen-Prod#readme"
+}
