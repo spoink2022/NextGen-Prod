@@ -1,0 +1,17 @@
+{
+    "admin" : "#daa520",
+    "stockUp" : "#00ff00",
+    "stockDown" : "#ff0000",
+    "cryptoUp" : "#00ff00",
+    "cryptoDown" : "#ff0000",
+    "stockSearch" : "#dddddd",
+    "balance" : "#dddddd",
+    "list" : "#9933ff",
+    "savings" : "#9933ff",
+    "daily" : "#9933ff",
+    "success" : "#00ff00",
+    "ask" : "#9933ff",
+    "processing" : "#9933ff",
+    "reject" : "#ff0000",
+    "timeOut": "#222222"
+}

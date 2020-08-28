@@ -1,0 +1,30 @@
+{
+    "admin": {
+        "getdaily": [],
+        "setdaily": [],
+        "test": [],
+        "test2": []
+    },
+    "lee": {
+        "articles": []
+    },
+    "game": {
+        "init": ["initialize"],
+        "balance": ["b", "bal"],
+        "buy": [],
+        "sell": [],
+        "list": ["l"],
+        "addsavings": ["addsaving"],
+        "takesavings": ["takesaving"],
+        "savings": [],
+        "daily": []
+    },
+    "lookup": {
+        "stock": ["s"],
+        "crypto": ["c"],
+        "search": []
+    },
+    "misc": {
+        "ping": ["p"]
+    }
+}
