@@ -21,10 +21,11 @@ module.exports.getDailyMultiple = async function(day, foresight) {
 module.exports.setDaily = async function(day, type, value) {
     if(await this.getDaily(day)) { // overwrite
         var query = 'UPDATE game_daily SET type=$1, data=$2 WHERE day_varchar=$3';
+        await config.pquery(query, [type, value, day]);
     } else { // insert
-        var query = 'INSERT INTO game_daily (type, data, day, day_varchar) VALUES ($1, $2, $3, $3)';
+        var query = 'INSERT INTO game_daily (type, data, day, day_varchar) VALUES ($1, $2, $3, $4)';
+        await config.pquery(query, [type, value, new Date(day), day]);
     }
-    await config.pquery(query, [type, value, day]);
     return;
 }
 
