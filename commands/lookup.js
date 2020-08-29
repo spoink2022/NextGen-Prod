@@ -31,7 +31,8 @@ async function sendStock(msg, args) {
     if(!quote) { // no data on quote
         msg.reply(`**Stock Not Found**\n\`${ticker.toUpperCase()}\` is not a valid ticker value!`); return;
     }
-    const embed = await create.embed.stockInfo(quote);
+    const canvas = await create.canvas.stockGraph(ticker);
+    const embed = await create.embed.stockInfo(quote, canvas);
     msg.channel.send(embed);
 }
 
