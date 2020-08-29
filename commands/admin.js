@@ -73,6 +73,7 @@ module.exports.sendLeaderboards = async function(msg, channelId=null) {
     const users = await db.server.fetchUsersWithAccounts();
     let allRankings = [];
     for(user of users) {
+        if(config.mods.includes(user.userid)) { continue; } // no mods in leaderboards
         user.money = parseFloat(user.money);
         allRankings.push({
             userid: user.userid,
