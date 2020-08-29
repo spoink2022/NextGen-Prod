@@ -12,6 +12,7 @@ const gameLogic = require('../lib/gameLogic.js');
 const tutorial = require('../lib/tutorial.js');
 
 const commands = require('../static').commands.game;
+const static = require('../static');
 
 module.exports.contains = function(cmd) {
     return Object.keys(commands).includes(cmd) || Object.values(commands).flat(1).includes(cmd);
@@ -40,6 +41,8 @@ module.exports.run = async function(cmd, args, msg) {
         sendTakeSavings(msg, args, user); 
     } else if(cmdIs(cmd, 'savings')) {
         sendSavings(msg, user);
+    } else if(cmdIs(cmd, 'infosavings')) {
+        sendInfoSavings(msg);
     } else if(cmdIs(cmd, 'daily')) {
         sendDaily(msg, user);
     }
@@ -373,6 +376,9 @@ async function sendAddSavings(msg, args, user) {
         msg.reply(`**Invalid Amount**\n\`${amount}\` is not a valid parameter\nA positive, non-zero number (rounded to the 8th decimal place) was expected for <amount>`); return;
     }
     amount = amount==='all' ? user.money : calc.round(parseFloat(amount), 8);
+    if(amount === 0) { // all = 0
+        msg.reply('**No Money**\nYou don\'t have any money to deposit!'); return;
+    }
     if(amount > user.money) { // not enough money
         msg.reply(`**Not Enough Money**\nYou're trying to deposit **${format.dollarValue(amount, 8)}** but you only have **${format.dollarValue(user.money, 8)}**!`); return;
     }
@@ -412,6 +418,11 @@ async function sendSavings(msg, user) {
             lastDeposit: datetime.epochToDateString(parseInt(user.savings.split(' ')[1])*1000*60*60, year=true)
         });
     }
+    msg.channel.send(embed);
+}
+
+async function sendInfoSavings(msg) {
+    const embed = await create.embed.genericEmbed(static.text.infoSavings);
     msg.channel.send(embed);
 }
 // ____________________ SAVINGS-MULTI: END ____________________

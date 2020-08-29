@@ -15,6 +15,20 @@ const format = require('../lib/format.js');
 */
 
 // ____________________ UTILITY ____________________
+module.exports.genericEmbed = function(text) {
+    let embed = new Discord.MessageEmbed();
+    if(text.title) { embed.setTitle(text.title.replace('${prefix}', config.prefix)); }
+    if(text.author) { embed.setAuthor(text.author[0].replace('${prefix}', config.prefix), text.author[1]); }
+    if(text.color) { embed.setColor(colors[text.color]); }
+    if(text.fields) {
+        for(const[key, value] of Object.entries(text.fields)) {
+            embed.addField(key, value);
+        }
+    }
+    if(text.footer) { embed.setFooter(text.footer); }
+    return embed;
+}
+
 module.exports.titleOnly = function(content, author=null, color=null) {
     let embed = new Discord.MessageEmbed();
     if(author) { embed.setAuthor(author.tag, author.displayAvatarURL()); }
@@ -223,7 +237,7 @@ module.exports.commands = async function(helpMessage, commandChosen) {
     embed.setTitle(`Commands - ${commandChosen.toUpperCase()}`);
     embed.setColor(colors.commands);
     if(commandChosen==='general') { 
-        for(let tuple of helpMessage) { embed.addField(tuple[0], `\`${config.prefix}${tuple[1].join('`\n'+config.prefix)}`); }
+        for(let tuple of helpMessage) { embed.addField(tuple[0], `\`${config.prefix}${tuple[1].join('\n`'+config.prefix)}`); }
     } else {
         for(let i=0; i<helpMessage[1].length; i++) { helpMessage[1][i] = helpMessage[1][i].replace('${prefix}', config.prefix); }
         embed.addField(config.prefix+helpMessage[0], helpMessage[1].join('\n'));
