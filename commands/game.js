@@ -422,7 +422,9 @@ async function sendSavings(msg, user) {
 }
 
 async function sendInfoSavings(msg) {
-    const embed = await create.embed.genericEmbed(static.text.infoSavings);
+    let text = static.text.infoSavings;
+    text.fields.Interest = text.fields.Interest.replace('${config.savingsInterest}', config.savingsInterest);
+    const embed = await create.embed.genericEmbed(text);
     msg.channel.send(embed);
 }
 // ____________________ SAVINGS-MULTI: END ____________________
