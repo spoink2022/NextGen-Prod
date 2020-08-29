@@ -35,7 +35,7 @@ async function sendPassport(msg) {
     let author = msg.mentions.users.first() || msg.author;
     let userid = author.id;
     const user = await db.user.fetchUser(userid);
-    let nickname = (await msg.guild.members.fetch(userid)).nickname || msg.author.username;
+    let nickname = (await msg.guild.members.fetch(userid)).nickname || author.username;
     const roles = msg.guild.member(userid)._roles;
     let rolesString = '', roleNames = [], notableRole = 'member';
     for(roleId of roles) {
