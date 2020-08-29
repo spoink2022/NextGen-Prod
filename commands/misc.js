@@ -1,3 +1,5 @@
+const config = require('../private/config.json');
+
 const create = require('../create');
 const db = require('../db');
 const datetime = require('../lib/datetime.js');
@@ -18,6 +20,8 @@ module.exports.run = function(cmd, args, msg) {
         sendCommands(msg, args);
     } else if(cmdIs(cmd, 'help')) {
         sendHelp(msg);
+    } else if(cmdIs(cmd, 'version')) {
+        sendVersion(msg);
     }
 }
 
@@ -62,4 +66,8 @@ async function sendCommands(msg, args) {
 async function sendHelp(msg) {
     const embed = await create.embed.help();
     msg.channel.send(embed);
+}
+
+async function sendVersion(msg) {
+    msg.channel.send(`Current Version: v${config.version}`);
 }
