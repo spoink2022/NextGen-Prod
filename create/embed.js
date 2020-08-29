@@ -45,10 +45,13 @@ module.exports.ask = function(msg, text, callback) {
                 embed.setTitle(text.processing);
                 await sentEmbed.edit(embed)
                 await callback(true);
-                embed = sentEmbed.embeds[0];
-                embed.setColor(colors.success);
-                embed.setTitle(text.confirm);
-                sentEmbed.edit(embed);
+                const reEditEmbed = function() {
+                    embed = sentEmbed.embeds[0];
+                    embed.setColor(colors.success);
+                    embed.setTitle(text.confirm);
+                    sentEmbed.edit(embed);
+                }
+                setTimeout(reEditEmbed, 1000);
             } else if(endReason === 'reject') {
                 embed.setColor(colors.reject);
                 embed.setTitle(text.reject);
