@@ -1,0 +1,127 @@
+{
+    "commands" : {
+        "general" : [
+            ["Personal Commands", [
+                "passport` → shows your personal passport"
+            ]],
+            ["Info Commands", [
+                "ping` → checks the latency of the bot",
+                "stock <ticker>` → sends info about the stock <ticker>",
+                "crypto <symbol>` → sends info about the crypto <symbol>",
+                "search <company>` → sends ticker symbols of <company>",
+                "articles <symbol>` → sends articles regarding <symbol>"
+            ]],
+            ["Investing Game", [
+                "init` → creates a game account and start the tutorial",
+                "buy <type> <symbol> <amount>` → buys assets",
+                "sell <type> <symbol> <amount>` → sell assets",
+                "list <type>` → lists assets/orders",
+                "balance` → sends balance and networth",
+                "daily` → claims your daily reward"
+            ]],
+            ["Investing Game - Savings", [
+                "savings` → displays your savings account",
+                "addsavings <amount>` → deposits money into your savings account",
+                "takesavings <amount>` → withdraws money from your savings account"
+            ]]
+        ],
+        "passport" : [
+            "passport",
+            [
+                "Shows your custom passport",
+                "Mention (@) someone to see their passport"
+            ]            
+        ],
+        "ping" : [
+            "ping",
+            [
+                "Checks bot ping"
+            ]
+        ],
+        "stock" : [
+            "stock <ticker>",
+            [
+                "Returns information regarding the stock <ticker>\n",
+                "__Example Usage:__",
+                "`${prefix}stock AAPL`",
+                "`${prefix}stock amzn`"
+            ]
+        ],
+        "crypto" : [
+            "crypto <symbol>",
+            [
+                "Returns information regarding the cryptocurrency <symbol>\n",
+                "__Example Usage:__",
+                "`${prefix}crypto BTC`",
+                "`${prefix}crypto eth`"
+            ]
+        ],
+        "search" : [
+            "search <company>",
+            [
+                "Returns tickers relating to <company>\n",
+                "__Example Usage:__",
+                "`${prefix}search microsoft`",
+                "`${prefix}search Apple`"
+            ]
+        ],
+        "articles" : [
+            "articles <ticker>",
+            [
+                "Returns articles relating to <ticker>\n",
+                "__Example Usage:__",
+                "`${prefix}articles AMZN`",
+                "`${prefix}articles tsla`"
+            ]
+        ],
+        "init" : [
+            "init",
+            [
+                "Initializes your investing account, and begins the tutorial"
+            ]
+        ],
+        "buy" : [
+            "buy <type> <symbol> <amount>\n",
+            [
+                "Buys assets",
+                "Type must be one of: `stock`, `crypto`",
+                "*- stocks can only be bought in integer quantities*",
+                "*- if stocks are bought while markets are closed, they will be pre-ordered*",
+                "*- crypto can be bought with up to 4 decimal places*\n",
+                "__Example Usage:__",
+                "`${prefix}buy stock aapl 4`",
+                "`${prefix}buy crypto xmr 2.52`",
+                "`${prefix}buy crypto btc 1`"
+            ]
+        ],
+        "sell" : [
+            "sell <type> <symbol> <amount>\n",
+            [
+                "Sells assets",
+                "Type must be one of: `stock`, `crypto`",
+                "*- stocks can only be sold in integer quantities*",
+                "*- if stocks are sold while markets are closed, they will be pre-sold*",
+                "*- crypto can be bought with up to 4 decimal places*",
+                "*- amount supports the option `all`*\n",
+                "__Example Usage:__",
+                "`${prefix}sell stock tsla 10`",
+                "`${prefix}sell crypto eth 0.042`",
+                "`${prefix}sell crypto btc all`"
+            ]
+        ],
+        "list" : [
+            "list <type> <page>",
+            [
+                "Lists assets/orders",
+                "Type must be one of: `stock`, `crypto`, `orders`, `all`",
+                "*- <page> defaults to `1` if no value is provided, or if <type> is `all`*",
+                "*- each page shows up to 10 items*\n",
+                "__Example Usage:__",
+                "`${prefix}list stock`",
+                "`${prefix}list crypto`",
+                "`${prefix}list orders`",
+                "`${prefix}list all`"
+            ]
+        ]
+    }
+}

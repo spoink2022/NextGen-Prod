@@ -91,6 +91,6 @@ module.exports.sendLeaderboards = async function(msg, channelId=null) {
     db.server.updateLatestRank(leaderboards.map(a => a.userid));
     const embed = await create.adminEmbed.leaderboards(leaderboards.splice(0, TO_SHOW));
     const channel = channelId ? await guild.channels.resolve(channelId) : msg.mentions.channels.first() || msg.channel;
-    //channel.send('<@&730168677290344481>', embed);
-    channel.send(embed);
+    channel.send('<@&730168677290344481>', embed);
+    //channel.send(embed);
 }

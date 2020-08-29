@@ -1,5 +1,7 @@
 const Discord = require('discord.js');
 
+const config = require('../private/config.json');
+
 const colors = require('../static').colors;
 const datetime = require('../lib/datetime.js');
 const format = require('../lib/format.js');
@@ -209,5 +211,32 @@ module.exports.tutorial = async function(author, step, fieldName, fieldValue, fo
     embed.setColor(colors.tutorial);
     embed.addField(fieldName, fieldValue);
     if(footerValue) { embed.setFooter(footerValue); }
+    return embed;
+}
+
+module.exports.commands = async function(helpMessage, commandChosen) {
+    const footer = commandChosen==='general' ? `For more information on a specific command, type ${config.prefix}commands <command>` : `For an overview of commands, type ${config.prefix}commands`;
+    let embed = new Discord.MessageEmbed();
+    embed.setTitle(`Commands - ${commandChosen.toUpperCase()}`);
+    embed.setColor(colors.commands);
+    if(commandChosen==='general') { 
+        for(let tuple of helpMessage) { embed.addField(tuple[0], `\`${config.prefix}${tuple[1].join('`\n'+config.prefix)}`); }
+    } else {
+        for(let i=0; i<helpMessage[1].length; i++) { helpMessage[1][i] = helpMessage[1][i].replace('${prefix}', config.prefix); }
+        embed.addField(config.prefix+helpMessage[0], helpMessage[1].join('\n'));
+    }
+    embed.setFooter(footer);
+    return embed;
+}
+
+module.exports.help = async function() {
+    let embed = new Discord.MessageEmbed();
+    embed.setTitle('Welcome!');
+    embed.setColor(colors.help);
+    embed.setDescription(`Hello, I am the NextGen bot, and welcome to our server!`);
+    embed.addFields(
+        {name: 'How do get I started with investing?', value: `Just type \`${config.prefix}init\``}
+    );
+    embed.setFooter(`For a full list of commands, type \`${config.prefix}commands\``);
     return embed;
 }

@@ -28,6 +28,8 @@
     },
     "misc": {
         "ping": ["p"],
-        "passport": []
+        "passport": [],
+        "commands": ["command", "cmd", "cmds"],
+        "help": []
     }
 }
