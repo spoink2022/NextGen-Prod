@@ -15,6 +15,8 @@
     "reject" : "#ff0000",
     "timeOut": "#222222",
     "tutorial" : "#9933ff",
+    "commands" : "#dddddd",
+    "help" : "#dddddd",
     "passport" : {
         "member" : "#3498db",
         "tester" : "#e91e63",

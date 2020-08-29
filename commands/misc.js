@@ -3,6 +3,7 @@ const db = require('../db');
 const datetime = require('../lib/datetime.js');
 
 const commands = require('../static').commands.misc;
+const static = require('../static');
 
 module.exports.contains = function(cmd) {
     return Object.keys(commands).includes(cmd) || Object.values(commands).flat(1).includes(cmd);
@@ -13,6 +14,10 @@ module.exports.run = function(cmd, args, msg) {
         sendPing(msg);
     } else if(cmdIs(cmd, 'passport')) {
         sendPassport(msg);
+    } else if(cmdIs(cmd, 'commands')) {
+        sendCommands(msg, args);
+    } else if(cmdIs(cmd, 'help')) {
+        sendHelp(msg);
     }
 }
 
@@ -44,5 +49,17 @@ async function sendPassport(msg) {
     Transactions: ${user.transactions}
     Tutorial Status: ${user.tutorial==='complete' ? 'Complete' : `Incomplete (next: ${user.tutorial})`}`;
     const embed = await create.embed.passport(author, user, nickname, rolesString, investingGameString, notableRole);
+    msg.channel.send(embed);
+}
+
+async function sendCommands(msg, args) {
+    let commandChosen = Object.keys(static.text.commands).includes(args[0]) ? args[0] : 'general';
+    let helpMessage = static.text.commands[commandChosen];
+    const embed = await create.embed.commands(helpMessage, commandChosen);
+    msg.channel.send(embed);
+}
+
+async function sendHelp(msg) {
+    const embed = await create.embed.help();
     msg.channel.send(embed);
 }
