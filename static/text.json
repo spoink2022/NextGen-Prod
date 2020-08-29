@@ -135,5 +135,12 @@
                 "Claims your daily reward"
             ]
         ]
+    },
+    "infoSavings" : {
+        "Overview" : "Savings are a no-risk, tax-free way to earn money\nThere are no fees, and an APY of 2% is offered, meaning that if you put $100,000 into a savings account, you would have $102,000 after 1 year",
+        "Interest" : "Interest is earned on an hourly basis, at a rate of +${config.savingsInterest}%/h\nThis interest is compounding, meaning that you earn interest on your interest",
+        "Timing" : "To prevent cheating, interest begins accumulating on the hour after you bought it\nFor example, if you put money in at 2:45, it is treated as if it was put in at 3:00, and therefore at 4 you would see an increase",
+        "Finally..." : "Adding money to a savings account is equivalent to taking it all out and putting it back in + whatever else you added\nAll gains from savings are kept, but after depositing, you must wait until the next hour strikes before it begins earning interest (as per usual)",
+        "footer" : "All in all, savings are complicated, so feel free to ask questions. Good luck!"
     }
 }
