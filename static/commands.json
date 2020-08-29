@@ -31,6 +31,7 @@
         "ping": ["p"],
         "passport": [],
         "commands": ["command", "cmd", "cmds"],
-        "help": []
+        "help": [],
+        "version": ["v"]
     }
 }
