@@ -71,7 +71,6 @@ module.exports.ask = function(msg, text, callback) {
 // ___________________ SPECIFIC ____________________
 // ---------- Info ----------
 module.exports.stockInfo = function(quote, stockGraphCanvas) {
-    console.log(quote);
     const attachment = new Discord.MessageAttachment(stockGraphCanvas.toBuffer(), `${quote.ticker}.png`);
     let embed = new Discord.MessageEmbed();
     embed.setAuthor(quote.ticker, quote.logoUrl);
