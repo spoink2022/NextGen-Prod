@@ -26,7 +26,7 @@ module.exports.ask = function(msg, text, callback) {
     embed.setAuthor(msg.author.tag, msg.author.displayAvatarURL());
     embed.setTitle(text.ask);
     embed.setColor(colors.ask);
-    msg.channel.send(embed).then(sentEmbed => {
+    msg.reply(' ', embed).then(sentEmbed => {
         sentEmbed.react('✅');
         sentEmbed.react('❌');
         const filter = (reaction, user) => { return ['✅', '❌'].includes(reaction.emoji.name) && user.id === msg.author.id; }
@@ -182,5 +182,29 @@ module.exports.savings = async function(author, d) {
     + `+${format.percentageValue(d.changePct, 4)} | +${format.dollarValue(d.change, 4)}`
     + `\n---${format.dollarValue(d.oldBalance, 4)} → ${format.dollarValue(d.newBalance, 4)}`
     + '\n```');
+    return embed;
+}
+
+module.exports.passport = async function(author, user, nickname, rolesString, investingGameString, notableRole) {
+    const joinDate = new Date(user.day_joined);
+    let embed = new Discord.MessageEmbed();
+    embed.setTitle(`${format.padWithDashes(' ' + nickname+'\'s Passport ', 48)}`);
+    embed.setColor(colors.passport[notableRole]);
+    embed.setThumbnail(author.displayAvatarURL());
+    embed.addFields(
+        {name: 'Profile', value: `Date Joined: ${datetime.epochToDateJoined(joinDate.getTime())}`},
+        {name: 'Roles', value: rolesString},
+        {name: 'Investing Game', value: investingGameString}
+    );
+    return embed;
+}
+
+module.exports.tutorial = async function(author, step, fieldName, fieldValue, footerValue=null) {
+    let embed = new Discord.MessageEmbed();
+    embed.setAuthor(author.tag, author.displayAvatarURL());
+    embed.setTitle(`Tutorial - (${step}/6)`);
+    embed.setColor(colors.tutorial);
+    embed.addField(fieldName, fieldValue);
+    if(footerValue) { embed.setFooter(footerValue); }
     return embed;
 }

@@ -1,3 +1,5 @@
+const config = require('../private/config.json');
+
 const create = require('../create');
 const db = require('../db');
 const endpoints = require('../endpoints');
@@ -7,6 +9,7 @@ const calc = require('../lib/calc.js');
 const datetime = require('../lib/datetime.js');
 const format = require('../lib/format.js');
 const gameLogic = require('../lib/gameLogic.js');
+const tutorial = require('../lib/tutorial.js');
 
 const commands = require('../static').commands.game;
 
@@ -56,14 +59,16 @@ async function sendInit(msg, user) {
     if(user.tutorial !== 'init') { msg.reply('You already have an account!'); return; }
     await db.user.initializeGameAccount(msg.author.id);
     const embed = await create.embed.titleOnly('Successfully Created Account!', msg.author, 'success');
-    msg.channel.send(embed);
+    await msg.channel.send(embed);
+    tutorial.recommendBuy(msg);
 }
 
 async function sendBalance(msg, user) {
     const money = user.money;
     let embed = await create.embed.balance(msg.author, money, 'calculating...');
     let sentEmbed = await msg.channel.send(embed);
-    
+    if(user.tutorial === 'balance') { tutorial.recommendSell(msg); }
+
     const netWorth = await gameLogic.getNetWorth(user);
     embed = await create.embed.balance(msg.author, money, netWorth);
     sentEmbed.edit(embed);
@@ -95,6 +100,9 @@ async function buyStock(msg, ticker, amount, user) {
     if(!stockQuote) { // invalid ticker
         msg.reply(`**Stock Not Found**\n\`${ticker.toUpperCase()}\` is not a valid ticker value!`); return;
     }
+    if(!stockQuote.marketcap || stockQuote.marketcap < config.minMarketcap) { // too small of a stock
+        msg.reply(`**Marketcap Too Small**\nTo be traded in this game, stocks must have a market cap of at least ${format.dollarValue(config.minMarketcap, 0)}`); return;
+    }
     if(!datetime.isMarketOpen()) { // market closed
         preOrderStock(msg, ticker, amount, user); return;
     }
@@ -116,6 +124,7 @@ async function buyStock(msg, ticker, amount, user) {
     }
     create.embed.ask(msg, text, async function(confirmed) {
         if(confirmed) {
+            if(user.tutorial === 'buy') { tutorial.recommendList(msg); }
             analytics.increment('transactions');
             await db.user.creditStock(user, ticker.toUpperCase(), stockPrice, amount, paying=true);
         }
@@ -131,7 +140,10 @@ async function preOrderStock(msg, ticker, amount, user) {
         confirm: `Success, preordered ${format.intValue(amount)} ${ticker.toUpperCase()} share${amount===1 ? '' : 's'}!`
     };
     create.embed.ask(msg, text, async function(confirmed) {
-        if(confirmed) { await db.user.alterStockOrder(user, ticker.toUpperCase(), amount); }
+        if(confirmed) {
+            if(user.tutorial === 'buy') { tutorial.recommendList(msg, ticker.toUpperCase()); }
+            await db.user.alterStockOrder(user, ticker.toUpperCase(), amount);
+        }
     });
 }
 
@@ -216,6 +228,7 @@ async function sellStock(msg, ticker, amount, user) {
     }
     create.embed.ask(msg, text, async function(confirmed) {
         if(confirmed) {
+            if(user.tutorial === 'sell') { tutorial.recommendDaily(msg); }
             await db.user.removeStock(user, ticker, stockValue, amount, payout=true);
             analytics.increment('transactions');
         }
@@ -234,7 +247,10 @@ async function preSellStock(msg, ticker, amount, user) {
         confirm: `Success, presold ${format.intValue(amount)} ${ticker.toUpperCase()} share${amount===1 ? '' : 's'}!`
     };
     create.embed.ask(msg, text, async function(confirmed) {
-        if(confirmed) { await db.user.alterStockOrder(user, ticker.toUpperCase(), -amount); }
+        if(confirmed) {
+            if(user.tutorial === 'sell') { tutorial.recommendDaily(msg); }
+            await db.user.alterStockOrder(user, ticker.toUpperCase(), -amount);
+        }
     });
 }
 
@@ -296,7 +312,9 @@ async function sendList(msg, args, user) {
         sendListOrders(msg, user);
     } else if(toList === 'all') {
         await sendListStock(msg, page, user);
-        sendListCrypto(msg, page, user);
+        await sendListCrypto(msg, page, user);
+        await sendListOrders(msg, user);
+        if(user.tutorial === 'list') { tutorial.recommendBalance(msg); }
     } else { // invalid category to list
         msg.reply(`**Invalid Type**\n\`${toList}\` is not something that can be listed!`);
         return;
@@ -318,7 +336,7 @@ async function sendListStock(msg, page, user) {
     }
     const maxPage = Math.ceil(user.stocks.length / 10);
     const embed = await create.embed.listStock(msg.author, stocks, page, maxPage);
-    msg.channel.send(embed);
+    await msg.channel.send(embed);
 }
 
 async function sendListCrypto(msg, page, user) {
@@ -359,7 +377,7 @@ async function sendAddSavings(msg, args, user) {
         msg.reply(`**Not Enough Money**\nYou're trying to deposit **${format.dollarValue(amount, 8)}** but you only have **${format.dollarValue(user.money, 8)}**!`); return;
     }
     await db.user.addSavings(user, amount);
-    const embed = await create.embed.titleOnly(`Success, you deposited ${format.dollarValue(amount, 8)} into your savings account!`, msg.author, 'savings');
+    const embed = await create.embed.titleOnly(`Success, you deposited ${format.dollarValue(amount, 4)} into your savings account!`, msg.author, 'savings');
     msg.channel.send(embed);
 }
 
@@ -377,7 +395,7 @@ async function sendTakeSavings(msg, args, user) {
         msg.reply(`**Not Enough Funds**\nYou're trying to withdraw **${format.dollarValue(amount, 8)}** but you only have **${format.dollarValue(savingsBalance, 8)}** in your savings account!`); return;
     }
     await db.user.takeSavings(user, amount);
-    const embed = await create.embed.titleOnly(`Success, you withdrew ${format.dollarValue(amount, 8)} from your savings account!`, msg.author, 'savings');
+    const embed = await create.embed.titleOnly(`Success, you withdrew ${format.dollarValue(amount, 4)} from your savings account!`, msg.author, 'savings');
     msg.channel.send(embed);
 }
 
@@ -400,11 +418,13 @@ async function sendSavings(msg, user) {
 async function sendDaily(msg, user) {
     const today = datetime.currentDayDashedString();
     if(today === user.daily) { // already collected reward
-        msg.reply(`**Reward Already Collected**\nCome back tomorrow for tomorrow's reward!`); return;
+        await msg.reply(`**Reward Already Collected**\nCome back tomorrow for tomorrow's reward!`);
+        if(user.tutorial === 'daily') { tutorial.complete(msg); }
+        return;
     }
     const reward = await db.server.getDaily(today);
     await db.user.setDailyToCollected(user, today);
-    analytics.increment('dailyCollected');
+    analytics.increment('daily');
     let text = 'You collected your daily reward of ';
     if(reward.type === 'cash') {
         await db.user.addMoney(user, parseFloat(reward.data));
@@ -421,5 +441,6 @@ async function sendDaily(msg, user) {
         text += `**${format.intValue(amount)} ${symbol}**!`;
     }
     const embed = await create.embed.titleOnly(text, msg.author, 'daily');
-    msg.channel.send(embed);
+    await msg.channel.send(embed);
+    if(user.tutorial === 'daily') { tutorial.complete(msg); }
 }

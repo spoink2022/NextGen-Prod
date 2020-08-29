@@ -1,7 +1,13 @@
 {
-    "prefix" : ".",
+    "prefix" : ",",
     "mods" : [
         "322180183207575553"
     ],
-    "savingsInterest": 0.000002261
+    "savingsInterest": 0.000002261,
+    "minMarketcap": 50000000,
+    "serversToSetRoles": [
+        "727626849148207195",
+        "688488804176101435"
+    ],
+    "nextgenServer": "688488804176101435"
 }

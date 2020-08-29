@@ -1,9 +1,11 @@
 {
     "admin": {
+        "test": [],
+        "test2": [],
+        "analytics": [],
         "getdaily": [],
         "setdaily": [],
-        "test": [],
-        "test2": []
+        "leaderboards": []  
     },
     "lee": {
         "articles": []
@@ -25,6 +27,7 @@
         "search": []
     },
     "misc": {
-        "ping": ["p"]
+        "ping": ["p"],
+        "passport": []
     }
 }

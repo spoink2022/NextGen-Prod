@@ -5,8 +5,9 @@ const datetime = require('../lib/datetime.js');
 const gameLogic = require('../lib/gameLogic.js');
 
 initialize = async function(userid) {
-    let query = 'INSERT INTO users (userid) VALUES ($1) RETURNING *';
-    let user = (await config.pquery(query, [userid]))[0];
+    const today = datetime.currentDayDashedString();
+    let query = 'INSERT INTO users (userid, day_joined) VALUES ($1, $2) RETURNING *';
+    let user = (await config.pquery(query, [userid, today]))[0];
     return user;
 }
 // functions start
@@ -19,6 +20,13 @@ module.exports.fetchUser = async function(userid) {
     user.money = parseFloat(user.money);
     
     return user;
+}
+
+module.exports.onJoin = async function(userid) { // returns true if user is new, false if returning
+    let query = 'SELECT id FROM users WHERE userid=$1';
+    let user = (await config.pquery(query, [userid]))[0];
+    if(!user) { await initialize(userid); }
+    return user ? false : true;
 }
 // ____________________ SETTER ____________________
 module.exports.initializeGameAccount = async function(userid) {
@@ -45,12 +53,12 @@ module.exports.creditStock = async function(user, ticker, price, amount, paying=
         };
         const oldData = `${ticker} ${oldAmount} ${oldPrice}`;
         const newData = `${ticker} ${newInfo.amount} ${newInfo.avgPrice}`;
-        let query = 'UPDATE users SET stocks=ARRAY_REPLACE(stocks, $1, $2), money=$3 WHERE userid=$4';
+        let query = 'UPDATE users SET stocks=ARRAY_REPLACE(stocks, $1, $2), money=$3, transactions=transactions+1 WHERE userid=$4';
         await config.pquery(query, [oldData, newData, newInfo.money, user.userid]);
     } else {
         let money = paying ? calc.round(user.money - price * amount, 8) : user.money;
         const newData = `${ticker} ${amount} ${calc.round(price, 3)}`;
-        let query = 'UPDATE users SET stocks=ARRAY_APPEND(stocks, $1), money=$2 WHERE userid=$3';
+        let query = 'UPDATE users SET stocks=ARRAY_APPEND(stocks, $1), money=$2, transactions=transactions+1 WHERE userid=$3';
         await config.pquery(query, [newData, money, user.userid]);
     }
     return;
@@ -67,12 +75,12 @@ module.exports.creditCrypto = async function(user, symbol, price, amount, paying
         };
         const oldData = `${symbol} ${oldAmount} ${oldPrice}`;
         const newData = `${symbol} ${newInfo.amount} ${newInfo.avgPrice}`;
-        let query = 'UPDATE users SET crypto=ARRAY_REPLACE(crypto, $1, $2), money=$3 WHERE userid=$4';
+        let query = 'UPDATE users SET crypto=ARRAY_REPLACE(crypto, $1, $2), money=$3, transactions=transactions+1 WHERE userid=$4';
         await config.pquery(query, [oldData, newData, newInfo.money, user.userid]);
     } else {
         let money = paying ? calc.round(user.money - price * amount, 8) : user.money;
         const newData = `${symbol} ${amount} ${price}`;
-        let query = 'UPDATE users SET crypto=ARRAY_APPEND(crypto, $1), money=$2 WHERE userid=$3';
+        let query = 'UPDATE users SET crypto=ARRAY_APPEND(crypto, $1), money=$2, transactions=transactions+1 WHERE userid=$3';
         await config.pquery(query, [newData, money, user.userid]);
     }
     return;
@@ -83,12 +91,12 @@ module.exports.removeStock = async function(user, ticker, stockValue, amount, pa
     const oldData = `${ticker} ${userStocks[ticker].qt} ${userStocks[ticker].buyPrice}`;
     const money = payout ? calc.round(user.money + stockValue * amount, 8) : user.money;
     if(amount >= userStocks[ticker].qt) {
-        let query = 'UPDATE users SET stocks=ARRAY_REMOVE(stocks, $1), money=$2 WHERE userid=$3';
+        let query = 'UPDATE users SET stocks=ARRAY_REMOVE(stocks, $1), money=$2, transactions=transactions+1 WHERE userid=$3';
         await config.pquery(query, [oldData, money, user.userid]);
     } else {
         let newAmount = userStocks[ticker].qt - amount;
         const newData = `${ticker} ${newAmount} ${userStocks[ticker].buyPrice}`;
-        let query = 'UPDATE users SET stocks=ARRAY_REPLACE(stocks, $1, $2), money=$3 WHERE userid=$4';
+        let query = 'UPDATE users SET stocks=ARRAY_REPLACE(stocks, $1, $2), money=$3, transactions=transactions+1 WHERE userid=$4';
         await config.pquery(query, [oldData, newData, money, user.userid]);
     }
     return;
@@ -99,12 +107,12 @@ module.exports.removeCrypto = async function(user, symbol, cryptoValue, amount, 
     const oldData = `${symbol} ${userCrypto[symbol].qt} ${userCrypto[symbol].buyPrice}`;
     const money = payout ? calc.round(user.money + cryptoValue * amount, 8) : user.money;
     if(amount >= userCrypto[symbol].qt) {
-        let query = 'UPDATE users SET crypto=ARRAY_REMOVE(crypto, $1), money=$2 WHERE userid=$3';
+        let query = 'UPDATE users SET crypto=ARRAY_REMOVE(crypto, $1), money=$2, transactions=transactions+1 WHERE userid=$3';
         await config.pquery(query, [oldData, money, user.userid]);
     } else {
         let newAmount = userCrypto[symbol].qt - amount;
         const newData = `${symbol} ${newAmount} ${userCrypto[symbol].buyPrice}`;
-        let query = 'UPDATE users SET crypto=ARRAY_REPLACE(crypto, $1, $2), money=$3 WHERE userid=$4';
+        let query = 'UPDATE users SET crypto=ARRAY_REPLACE(crypto, $1, $2), money=$3, transactions=transactions+1 WHERE userid=$4';
         await config.pquery(query, [oldData, newData, money, user.userid]);
     }
     return;
@@ -156,5 +164,11 @@ module.exports.takeSavings = async function(user, amount) {
 module.exports.setDailyToCollected = async function(user, day) {
     let query = 'UPDATE users SET daily=$1 WHERE userid=$2';
     await config.pquery(query, [day, user.userid]);
+    return;
+}
+
+module.exports.alterTutorial = async function(userid, newStage) {
+    let query = 'UPDATE users SET tutorial=$1 WHERE userid=$2';
+    await config.pquery(query, [newStage, userid]);
     return;
 }
