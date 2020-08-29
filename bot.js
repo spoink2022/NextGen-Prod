@@ -1,1 +1,2 @@
-const client = require('./lib/client.js');
+global.globals = {};
+globals.client = require('./lib/client.js');
