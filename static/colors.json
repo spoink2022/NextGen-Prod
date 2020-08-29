@@ -17,6 +17,7 @@
     "tutorial" : "#9933ff",
     "commands" : "#dddddd",
     "help" : "#dddddd",
+    "infoSavings" : "#dddddd",
     "passport" : {
         "member" : "#3498db",
         "tester" : "#e91e63",

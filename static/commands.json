@@ -8,7 +8,7 @@
         "leaderboards": []  
     },
     "lee": {
-        "articles": []
+        "articles": ["news"]
     },
     "game": {
         "init": ["initialize"],
@@ -19,6 +19,7 @@
         "addsavings": ["addsaving"],
         "takesavings": ["takesaving"],
         "savings": [],
+        "infosavings": [],
         "daily": []
     },
     "lookup": {
