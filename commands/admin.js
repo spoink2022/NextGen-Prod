@@ -80,7 +80,7 @@ module.exports.sendLeaderboards = async function(msg, channelId=null) {
         });
     }
     allRankings.sort((a, b) => a.netWorth > b.netWorth ? -1 : 1);
-    let TO_SHOW = 2, leaderboards = [];
+    let TO_SHOW = 3, leaderboards = [];
     for(user of allRankings) {
         try { var guildMember = (await guild.members.fetch(user.userid)); }
         catch { continue; } // member not in guild
