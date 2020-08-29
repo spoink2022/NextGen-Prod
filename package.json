@@ -4,6 +4,7 @@
   "description": "for real this time",
   "main": "index.js",
   "dependencies": {
+    "canvas": "2.6.1",
     "discord.js": "12.3.1",
     "pg": "8.3.2"
   },

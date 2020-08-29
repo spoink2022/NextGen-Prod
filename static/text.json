@@ -122,6 +122,18 @@
                 "`${prefix}list orders`",
                 "`${prefix}list all`"
             ]
+        ],
+        "balance" : [
+            "balance",
+            [
+                "Shows your cash and net worth"
+            ]
+        ],
+        "daily" : [
+            "daily",
+            [
+                "Claims your daily reward"
+            ]
         ]
     }
 }
