@@ -30,7 +30,7 @@ module.exports.onJoin = async function(userid) { // returns true if user is new,
 }
 // ____________________ SETTER ____________________
 module.exports.initializeGameAccount = async function(userid) {
-    let query = `UPDATE users SET money=100000, tutorial='buy' WHERE userid=$1`;
+    let query = `UPDATE users SET money=20000, tutorial='buy' WHERE userid=$1`;
     await config.pquery(query, [userid]);
     return;
 }

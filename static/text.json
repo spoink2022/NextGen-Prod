@@ -1,11 +1,14 @@
 {
     "commands" : {
         "general" : [
+            ["Misc Commands", [
+                "ping` → checks the latency of the bot",
+                "version` → returns bot's current version"
+            ]],
             ["Personal Commands", [
                 "passport` → shows your personal passport"
             ]],
             ["Info Commands", [
-                "ping` → checks the latency of the bot",
                 "stock <ticker>` → sends info about the stock <ticker>",
                 "crypto <symbol>` → sends info about the crypto <symbol>",
                 "search <company>` → sends ticker symbols of <company>",
@@ -26,18 +29,24 @@
                 "takesavings <amount>` → withdraws money from your savings account"
             ]]
         ],
-        "passport" : [
-            "passport",
+        "version" : [
+            "version",
             [
-                "Shows your custom passport",
-                "Mention (@) someone to see their passport"
-            ]            
+                "Returns the bot's current version"
+            ]
         ],
         "ping" : [
             "ping",
             [
                 "Checks bot ping"
             ]
+        ],
+        "passport" : [
+            "passport",
+            [
+                "Shows your custom passport",
+                "Mention (@) someone to see their passport"
+            ]            
         ],
         "stock" : [
             "stock <ticker>",

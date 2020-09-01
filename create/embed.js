@@ -42,6 +42,7 @@ module.exports.ask = function(msg, text, callback) {
     embed.setAuthor(msg.author.tag, msg.author.displayAvatarURL());
     embed.setTitle(text.ask);
     embed.setColor(colors.ask);
+    if(text.footer) { embed.setFooter(text.footer); }
     msg.reply(' ', embed).then(sentEmbed => {
         sentEmbed.react('✅');
         sentEmbed.react('❌');
@@ -56,6 +57,7 @@ module.exports.ask = function(msg, text, callback) {
         collector.on('end', async() => {
             sentEmbed.reactions.removeAll().catch(error => console.error('Failed to clear reactions (DM Channel)'));
             embed = sentEmbed.embeds[0];
+            embed.setFooter(' ');
             if(endReason === 'confirm') {
                 embed.setColor(colors.processing);
                 embed.setTitle(text.processing);

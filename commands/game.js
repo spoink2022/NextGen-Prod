@@ -138,6 +138,7 @@ async function buyStock(msg, ticker, amount, user) {
 async function preOrderStock(msg, ticker, amount, user) {
     let text = {
         ask: `Preorder ${format.intValue(amount)} ${ticker.toUpperCase()} share${amount===1 ? '' : 's'}?`,
+        footer: 'Since the market is closed your order will go through (given you have enough funds) when the market reopens',
         reject: 'Cancelled!',
         processing: `Processing...`,
         confirm: `Success, preordered ${format.intValue(amount)} ${ticker.toUpperCase()} share${amount===1 ? '' : 's'}!`
@@ -245,6 +246,7 @@ async function preSellStock(msg, ticker, amount, user) {
     }
     let text = {
         ask: `Presell ${format.intValue(amount)} ${ticker.toUpperCase()} share${amount===1 ? '' : 's'}?`,
+        footer: 'Since the market is closed your order will go through (given you have enough funds) when the market reopens',
         reject: 'Cancelled!',
         processing: `Processing...`,
         confirm: `Success, presold ${format.intValue(amount)} ${ticker.toUpperCase()} share${amount===1 ? '' : 's'}!`

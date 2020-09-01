@@ -36,6 +36,9 @@ async function sendPing(msg) {
 }
 
 async function sendPassport(msg) {
+    if(msg.channel.type === 'dm') { // called in DM
+        msg.reply('Passports cannot be fetched in DM\'s!'); return;
+    }
     let author = msg.mentions.users.first() || msg.author;
     let userid = author.id;
     const user = await db.user.fetchUser(userid);
