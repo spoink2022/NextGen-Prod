@@ -12,7 +12,7 @@
                 "stock <ticker>` → sends info about the stock <ticker>",
                 "crypto <symbol>` → sends info about the crypto <symbol>",
                 "search <company>` → sends ticker symbols of <company>",
-                "articles <symbol>` → sends articles regarding <symbol>"
+                "articles <ticker>` → sends articles regarding <symbol>"
             ]],
             ["Investing Game", [
                 "init` → creates a game account and start the tutorial",
