@@ -29,9 +29,9 @@ module.exports.setDaily = async function(day, type, value) {
     return;
 }
 
-module.exports.saveAnalytics = async function(change) {
-    let query = 'UPDATE analytics SET messages=messages+$1, transactions=transactions+$2, daily=daily+$3';
-    await config.pquery(query, [change.messages, change.transactions, change.daily]);
+module.exports.saveAnalytics = async function(change, fixed) {
+    let query = 'UPDATE analytics SET messages=messages+$1, transactions=transactions+$2, daily=daily+$3, members=$4';
+    await config.pquery(query, [change.messages, change.transactions, change.daily, fixed.members]);
     return;
 }
 
