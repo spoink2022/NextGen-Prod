@@ -44,7 +44,7 @@ async function sendTest2(msg, args) {
 // ________________________________________ FUNCTIONS ________________________________________
 async function sendAnalytics(msg) {
     let a = await analytics.fetch();
-    const embed = await create.adminEmbed.analytics(a.messages, a.transactions, a.daily);
+    const embed = await create.adminEmbed.analytics(a);
     msg.channel.send(embed);
 }
 

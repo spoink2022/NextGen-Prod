@@ -17,14 +17,16 @@ module.exports.getDaily = async function(rewards) {
     return embed;
 }
 
-module.exports.analytics = async function(messages, transactions, daily) {
+module.exports.analytics = async function(analytics) {
+    let a = analytics;
     let embed = new Discord.MessageEmbed();
     embed.setTitle('Analytics');
     embed.setColor(colors.admin);
     embed.addFields(
-        {name: 'Messages Sent', value: messages, inline: true},
-        {name: 'Transactions', value: transactions, inline: true},
-        {name: 'Daily Collected', value: daily, inline: false}
+        {name: 'Messages Sent', value: a.messages, inline: true},
+        {name: 'Transactions', value: a.transactions, inline: true},
+        {name: 'Daily Collected', value: a.daily, inline: true},
+        {name: 'Members', value: a.members, inline: true}
     );
     return embed;
 }

@@ -20,6 +20,7 @@ module.exports.genericEmbed = function(text) {
     if(text.title) { embed.setTitle(text.title.replace('${prefix}', config.prefix)); }
     if(text.author) { embed.setAuthor(text.author[0].replace('${prefix}', config.prefix), text.author[1]); }
     if(text.color) { embed.setColor(colors[text.color]); }
+    if(text.description) { embed.setDescription(text.description); }
     if(text.fields) {
         for(const[key, value] of Object.entries(text.fields)) {
             embed.addField(key, value);
