@@ -16,6 +16,7 @@
     "timeOut": "#222222",
     "tutorial" : "#9933ff",
     "commands" : "#dddddd",
+    "link" : "#dddddd",
     "help" : "#dddddd",
     "infoSavings" : "#dddddd",
     "passport" : {

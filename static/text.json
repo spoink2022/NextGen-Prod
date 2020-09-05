@@ -3,7 +3,8 @@
         "general" : [
             ["Misc Commands", [
                 "ping` → checks the latency of the bot",
-                "version` → returns bot's current version"
+                "version` → returns bot's current version",
+                "link <key>` → sends useful links"
             ]],
             ["Personal Commands", [
                 "passport` → shows your personal passport"
@@ -39,6 +40,16 @@
             "ping",
             [
                 "Checks bot ping"
+            ]
+        ],
+        "link" : [
+            "link <key>",
+            [
+                "Shows useful links (or a list of allowed links)",
+                "*- if <key> is empty, or is not a valid link, a list of allowed links will be returned*\n",
+                "__Example Usage:__",
+                "`${prefix}link earnings`",
+                "`${prefix}link`"
             ]
         ],
         "passport" : [
@@ -189,5 +200,9 @@
             "Finally..." : "Adding money to a savings account is equivalent to taking it all out and putting it back in + whatever else you added\nAll gains from savings are kept, but after depositing, you must wait until the next hour strikes before it begins earning interest (as per usual)"
         },
         "footer" : "All in all, savings are complicated, so feel free to ask questions. Good luck!"
+    },
+    "link" : {
+        "earnings" : ["https://finance.yahoo.com/calendar/earnings", "upcoming earnings announcements"],
+        "website" : ["https://nextgenfinance.org", "NextGen's landing page"]
     }
 }

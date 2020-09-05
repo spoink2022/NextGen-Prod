@@ -18,6 +18,8 @@ module.exports.run = function(cmd, args, msg) {
         sendPassport(msg);
     } else if(cmdIs(cmd, 'commands')) {
         sendCommands(msg, args);
+    } else if(cmdIs(cmd, 'link')) {
+        sendLink(msg, args);
     } else if(cmdIs(cmd, 'help')) {
         sendHelp(msg);
     } else if(cmdIs(cmd, 'version')) {
@@ -64,6 +66,24 @@ async function sendCommands(msg, args) {
     let helpMessage = static.text.commands[commandChosen];
     const embed = await create.embed.commands(helpMessage, commandChosen);
     msg.channel.send(embed);
+}
+
+async function sendLink(msg, args) {
+    let linkKey = args[0];
+    if(!linkKey || !Object.keys(static.text.link).includes(linkKey)) {
+        let description = '';
+        for(const[key, val] of Object.entries(static.text.link)) { description += `**${key}** → ${val[1]}\n`; }
+        const text = {
+            title: 'All Links',
+            color: 'link',
+            description: description,
+            footer: 'This page was shown because either no link or an invalid link was provided'
+        };
+        const embed = await create.embed.genericEmbed(text);
+        msg.channel.send(embed);
+    } else {
+        msg.channel.send(static.text.link[linkKey][0]);
+    }
 }
 
 async function sendHelp(msg) {
