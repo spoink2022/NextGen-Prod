@@ -67,5 +67,5 @@ module.exports.cryptoGraph = async function(symbol, data, up) {
             }
         }
     }
-    return renderCryptoInfo(configuration);
+    return await renderCryptoInfo(configuration);
 }
