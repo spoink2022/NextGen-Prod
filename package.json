@@ -5,6 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "canvas": "2.6.1",
+    "chart.js": "2.9.3",
+    "chartjs-node-canvas": "3.0.6",
     "discord.js": "12.3.1",
     "pg": "8.3.2"
   },

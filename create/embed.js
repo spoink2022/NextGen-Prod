@@ -108,7 +108,8 @@ module.exports.stockInfo = function(quote, stockGraphCanvas) {
     return embed;
 }
 
-module.exports.cryptoInfo = function(q) {
+module.exports.cryptoInfo = function(q, cryptoGraphCanvas) {
+    const attachment = new Discord.MessageAttachment(cryptoGraphCanvas, `${q.symbol}.png`);
     let embed = new Discord.MessageEmbed();
     embed.setAuthor(q.symbol, q.logoUrl);
     embed.setColor(q.change1DPercent >= 0 ? colors.cryptoUp : colors.cryptoDown);
@@ -123,6 +124,8 @@ module.exports.cryptoInfo = function(q) {
         {name: 'Marketcap', value: format.dollarValue(q.marketcap, 0), inline: true}
     );
     embed.setFooter('Last updated ' + datetime.epochToDateString(datetime.epochToEpochEST(q.latestUpdate)));
+    embed.attachFiles(attachment);
+    embed.setImage(`attachment://${q.symbol}.png`);
     return embed;
 }
 
