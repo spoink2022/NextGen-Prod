@@ -453,7 +453,7 @@ async function sendDaily(msg, user) {
         let symbol = reward.data.split(' ')[0], amount = parseFloat(reward.data.split(' ')[1]);
         let quote = await endpoints.crypto.getQuote(symbol);
         await db.user.creditCrypto(user, symbol, quote.price, amount, paying=false);
-        text += `**${format.intValue(amount)} ${symbol}**!`;
+        text += `**${format.floatValue(amount, 8, false)} ${symbol}**!`;
     }
     const embed = await create.embed.titleOnly(text, msg.author, 'daily');
     await msg.channel.send(embed);
