@@ -1,4 +1,5 @@
-const { createCanvas, loadImage } = require('canvas');
+const { createCanvas, loadImage, registerFont } = require('canvas');
+registerFont('lib/fonts/Montserrat-Regular.ttf', {family: 'Arial'}); // until i figure out how to choose fonts, montserrat will be the Arial/default
 const { CanvasRenderService } = require('chartjs-node-canvas');
 
 const format = require('../lib/format.js');
@@ -37,7 +38,7 @@ module.exports.cryptoGraph = async function(symbol, data, up) {
             }]
         },
         options: {
-            scales:     {
+            scales: {
                 xAxes: [{
                     type: "time",
                     time: {
