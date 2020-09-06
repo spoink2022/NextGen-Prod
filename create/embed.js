@@ -108,7 +108,8 @@ module.exports.stockInfo = function(quote, stockGraphCanvas) {
     return embed;
 }
 
-module.exports.cryptoInfo = function(q) {
+module.exports.cryptoInfo = function(q, cryptoGraphCanvas) {
+    const attachment = new Discord.MessageAttachment(cryptoGraphCanvas, `${q.symbol}.png`);
     let embed = new Discord.MessageEmbed();
     embed.setAuthor(q.symbol, q.logoUrl);
     embed.setColor(q.change1DPercent >= 0 ? colors.cryptoUp : colors.cryptoDown);
@@ -123,6 +124,8 @@ module.exports.cryptoInfo = function(q) {
         {name: 'Marketcap', value: format.dollarValue(q.marketcap, 0), inline: true}
     );
     embed.setFooter('Last updated ' + datetime.epochToDateString(datetime.epochToEpochEST(q.latestUpdate)));
+    embed.attachFiles(attachment);
+    embed.setImage(`attachment://${q.symbol}.png`);
     return embed;
 }
 
@@ -210,7 +213,7 @@ module.exports.savings = async function(author, d) {
     return embed;
 }
 
-module.exports.passport = async function(author, user, nickname, rolesString, investingGameString, notableRole) {
+module.exports.passport = async function(author, user, nickname, text, notableRole) {
     const joinDate = new Date(user.day_joined);
     let embed = new Discord.MessageEmbed();
     embed.setTitle(`${format.padWithDashes(' ' + nickname+'\'s Passport ', 48)}`);
@@ -218,9 +221,9 @@ module.exports.passport = async function(author, user, nickname, rolesString, in
     embed.setThumbnail(author.displayAvatarURL());
     embed.addFields(
         {name: 'Profile', value: `Date Joined: ${datetime.epochToDateJoined(joinDate.getTime())}`},
-        {name: 'Roles', value: rolesString},
-        {name: 'Investing Game', value: investingGameString}
+        {name: 'Roles', value: text.roles}
     );
+    if(text.investingGame) { embed.addField('Investing Game', text.investingGame); }
     return embed;
 }
 

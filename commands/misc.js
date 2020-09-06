@@ -52,12 +52,19 @@ async function sendPassport(msg) {
         rolesString += `- ${role.name}\n`;
         roleNames.push(role.name);
     }
-    if(roleNames.includes('Admin')) { notableRole = 'admin'; }
-    else if(roleNames.includes('Tester')) { notableRole = 'tester'; }
-    let investingGameString = `Latest Rank: ${user.latest_rank===0 ? 'Unranked' : datetime.rankFormat(user.latest_rank)}
-    Transactions: ${user.transactions}
-    Tutorial Status: ${user.tutorial==='complete' ? 'Complete' : `Incomplete (next: ${user.tutorial})`}`;
-    const embed = await create.embed.passport(author, user, nickname, rolesString, investingGameString, notableRole);
+    let text = {
+        investingGame: `Latest Rank: ${user.latest_rank===0 ? 'Unranked' : datetime.rankFormat(user.latest_rank)}
+        Transactions: ${user.transactions}
+        Tutorial Status: ${user.tutorial==='complete' ? 'Complete' : `Incomplete (next: ${user.tutorial})`}`,
+        roles: rolesString
+    }
+    if(roleNames.includes('Admin')) {
+        notableRole = 'admin';
+        delete text.investingGame;
+    } else if(roleNames.includes('Tester')) {
+        notableRole = 'tester';
+    }
+    const embed = await create.embed.passport(author, user, nickname, text, notableRole);
     msg.channel.send(embed);
 }
 
