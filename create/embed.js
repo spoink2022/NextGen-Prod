@@ -213,7 +213,7 @@ module.exports.savings = async function(author, d) {
     return embed;
 }
 
-module.exports.passport = async function(author, user, nickname, rolesString, investingGameString, notableRole) {
+module.exports.passport = async function(author, user, nickname, text, notableRole) {
     const joinDate = new Date(user.day_joined);
     let embed = new Discord.MessageEmbed();
     embed.setTitle(`${format.padWithDashes(' ' + nickname+'\'s Passport ', 48)}`);
@@ -221,9 +221,9 @@ module.exports.passport = async function(author, user, nickname, rolesString, in
     embed.setThumbnail(author.displayAvatarURL());
     embed.addFields(
         {name: 'Profile', value: `Date Joined: ${datetime.epochToDateJoined(joinDate.getTime())}`},
-        {name: 'Roles', value: rolesString},
-        {name: 'Investing Game', value: investingGameString}
+        {name: 'Roles', value: text.roles}
     );
+    if(text.investingGame) { embed.addField('Investing Game', text.investingGame); }
     return embed;
 }
 
