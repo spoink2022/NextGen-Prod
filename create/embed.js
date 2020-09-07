@@ -87,8 +87,8 @@ module.exports.ask = function(msg, text, callback) {
 }
 // ___________________ SPECIFIC ____________________
 // ---------- Info ----------
-module.exports.stockInfo = function(quote, stockGraphCanvas) {
-    const attachment = new Discord.MessageAttachment(stockGraphCanvas.toBuffer(), `${quote.ticker}.png`);
+module.exports.stockInfo = function(quote, stockGraphCanvas=null) {
+    //const attachment = new Discord.MessageAttachment(stockGraphCanvas.toBuffer(), `${quote.ticker}.png`);
     let embed = new Discord.MessageEmbed();
     embed.setAuthor(quote.ticker, quote.logoUrl);
     embed.setColor(quote.change >= 0 ? colors.stockUp : colors.stockDown);
@@ -103,8 +103,8 @@ module.exports.stockInfo = function(quote, stockGraphCanvas) {
         {name: 'Exchange', value: quote.exchange || 'No Data', inline: true}
     );
     embed.setFooter('Last updated ' + datetime.epochToDateString(datetime.epochToEpochEST(quote.latestUpdate)));
-    embed.attachFiles(attachment);
-    embed.setImage(`attachment://${quote.ticker}.png`);
+    //embed.attachFiles(attachment);
+    //embed.setImage(`attachment://${quote.ticker}.png`);
     return embed;
 }
 
