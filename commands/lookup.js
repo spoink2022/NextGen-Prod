@@ -31,8 +31,11 @@ async function sendStock(msg, args) {
     if(!quote) { // no data on quote
         msg.reply(`**Stock Not Found**\n\`${ticker.toUpperCase()}\` is not a valid ticker value!`); return;
     }
-    //const canvas = await create.canvas.stockGraph(ticker);
-    const embed = await create.embed.stockInfo(quote); // canvas as a parameter
+    //const chartData = await endpoints.stock.getChartData(ticker);
+    //if(chartData) { var stockGraphCanvas = await create.canvas.stockGraph(ticker, chartData, quote.change1D); }
+    try { var stockGraphCanvas = await create.canvas.stockGraph(ticker); }
+    catch { }
+    const embed = await create.embed.stockInfo(quote, stockGraphCanvas); // canvas as a parameter
     msg.channel.send(embed);
 }
 
@@ -45,9 +48,9 @@ async function sendCrypto(msg, args) {
     if(!quote) { // no data on quote
         msg.reply(`**Cryptocurrency Not Found**\n\`${symbol.toUpperCase()}\` is not a valid cryptocurrency!`); return;
     }
-    const chartData = await endpoints.crypto.getChartData(quote.name.toLowerCase());
-    const cryptoGraphCanvas = await create.canvas.cryptoGraph(symbol, chartData, quote.change1D>=0);
-    let embed = await create.embed.cryptoInfo(quote, cryptoGraphCanvas);
+    const chartData = await endpoints.crypto.getChartData(quote.name);
+    if(chartData) { var cryptoGraphCanvas = await create.canvas.cryptoGraph(symbol, chartData, quote.change1D>=0); }
+    const embed = await create.embed.cryptoInfo(quote, cryptoGraphCanvas);
     msg.channel.send(embed);
 }
 

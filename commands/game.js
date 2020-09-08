@@ -161,6 +161,9 @@ async function buyCrypto(msg, symbol, amount, user) {
     if(!cryptoQuote) { // invalid symbol
         msg.reply(`**Cryptocurrency Not Found**\n\`${symbol}\` is not a valid cryptocurrency!`); return;
     }
+    if(!cryptoQuote.marketcap || cryptoQuote.marketcap < config.minMarketcapCrypto) { // too small of a stock
+        msg.reply(`**Marketcap Too Small**\nTo be traded in this game, cryptocurrencies must have a market cap of at least ${format.dollarValue(config.minMarketcapCrypto, 0)}`); return;
+    }
     let cryptoPrice = cryptoQuote.price;
     let totalPrice = calc.round(cryptoPrice * amount, 8);
     if(totalPrice > user.money) { // can't afford buy

@@ -40,3 +40,15 @@ module.exports.getPrices = async function(tickers) { // includes company name
         return res;
     }).catch(err => { return {}; });
 }
+
+module.exports.getChartData = async function(ticker) {
+    let response = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${ticker}&apikey=${keys.alphavantage}`);
+    return response.json().then(json => {
+        json = json['Time Series (Daily)'];
+        let chartData = [];
+        for(const[key, val] of Object.entries(json)) {
+            chartData.push({t: new Date(key), y: val['4. close']});
+        }
+        return chartData;
+    });
+}
