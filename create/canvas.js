@@ -23,7 +23,7 @@ module.exports.stockGraph = async function(ticker) {
 
 module.exports.cryptoGraph = async function(symbol, data, up) {
     data = data.map(function(tuple) {
-        return {t: new Date(tuple[0]), y: tuple[1]}
+        return {t: new Date(tuple[0]), y: tuple[1]};
     });
 
     const configuration = {
