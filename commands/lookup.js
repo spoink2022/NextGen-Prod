@@ -46,7 +46,7 @@ async function sendCrypto(msg, args) {
         msg.reply(`**Cryptocurrency Not Found**\n\`${symbol.toUpperCase()}\` is not a valid cryptocurrency!`); return;
     }
     const chartData = await endpoints.crypto.getChartData(quote.name.toLowerCase());
-    const cryptoGraphCanvas = await create.canvas.cryptoGraph(symbol, chartData, quote.change1D>=0);
+    if(chartData) { var cryptoGraphCanvas = await create.canvas.cryptoGraph(symbol, chartData, quote.change1D>=0); }
     let embed = await create.embed.cryptoInfo(quote, cryptoGraphCanvas);
     msg.channel.send(embed);
 }
