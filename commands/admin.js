@@ -1,8 +1,10 @@
 const create = require('../create');
 const db = require('../db');
+const endpoints = require('../endpoints');
 const config = require('../private/config.json');
 const analytics = require('../lib/trackers/analytics.js');
 const buyOrders = require('../lib/trackers/buyOrders.js');
+const calc = require('../lib/calc.js');
 const datetime = require('../lib/datetime.js');
 const gameLogic = require('../lib/gameLogic.js');
 
@@ -27,6 +29,10 @@ module.exports.run = function(cmd, args, msg) {
         sendSetDaily(msg, args);
     } else if(cmdIs(cmd, 'leaderboards')) {
         this.sendLeaderboards(msg);
+    } else if(cmdIs(cmd, 'stockpick.setbuyprices')) {
+        this.stockPick.setBuyPrices(msg);
+    } else if(cmdIs(cmd, 'stockpick.leaderboards')) {
+        this.stockPick.sendLeaderboards(msg);
     }
 }
 
@@ -94,4 +100,48 @@ module.exports.sendLeaderboards = async function(msg, channelId=null) {
     const channel = channelId ? await guild.channels.resolve(channelId) : msg.mentions.channels.first() || msg.channel;
     channel.send('<@&730168677290344481>', embed);
     //channel.send(embed);
+}
+
+// _____________________________ EVENT FUNCTIONS _________________________________
+module.exports.stockPick = {};
+module.exports.stockPick.setBuyPrices = async function(msg) { // & company name
+    let stocksPicked = (await db.event.fetchStocksPicked()).map(obj => obj.pick);
+    let prices = await endpoints.stock.getPrices(stocksPicked);
+    await db.event.setBuyPrices(prices);
+    let stocksPicked2 = (await db.event.fetchStocksPicked2()).map(obj => obj.pick2);
+    let prices2 = await endpoints.stock.getPrices(stocksPicked2);
+    await db.event.setBuyPrices2(prices2);
+    msg.reply('set buy prices');
+}
+
+module.exports.stockPick.sendLeaderboards = async function(msg) {
+    const guild = await globals.client.guilds.fetch(config.nextgenServer);
+    const users = await db.event.fetchStockPickUsers();
+    let stocksPicked = [], allRankings = [];
+    for(const user of users) {
+        if(!stocksPicked[user.pick]) { stocksPicked.push(user.pick); }
+        if(!stocksPicked[user.pick2]) { stocksPicked.push(user.pick2); }
+    }
+    const prices = await endpoints.stock.getPrices(stocksPicked);
+    for(const user of users) {
+        allRankings.push({
+            userid: user.userid,
+            pick: user.pick,
+            pick2: user.pick2,
+            percentageGain: calc.percentChange(parseFloat(user.buy_price), prices[user.pick].price),
+            percentageGain2: calc.percentChange(parseFloat(user.buy_price2), prices[user.pick2].price)
+        });
+    }
+    allRankings.sort((a, b) => a.percentageGain+a.percentageGain2 > b.percentageGain+b.percentageGain2 ? -1 : 1);
+    let TO_SHOW = 3, leaderboards = [];
+    for(user of allRankings) {
+        try { var guildMember = (await guild.members.fetch(user.userid)); }
+        catch { continue; } // member not in guild
+        user.name = guildMember.user.tag;
+        leaderboards.push(user);
+    }
+    db.event.updateLatestRank(leaderboards.map(a => a.userid));
+    const embed = await create.eventEmbed.leaderboards(leaderboards.splice(0, TO_SHOW));
+    const channel = msg.mentions.channels.first() || msg.channel;
+    channel.send('@roles', embed);
 }

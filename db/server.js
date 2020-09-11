@@ -4,7 +4,6 @@ const endpoints = require('../endpoints');
 
 const datetime = require('../lib/datetime.js');
 const gameLogic = require('../lib/gameLogic.js');
-const { user } = require('./index.js');
 
 module.exports.getDaily = async function(day) {
     let query = 'SELECT type, data FROM game_daily WHERE day_varchar=$1';
@@ -63,7 +62,7 @@ module.exports.updateLatestRank = async function(leaderboards) {
     let query = 'UPDATE users SET latest_rank=0';
     await config.pquery(query);
     let values = `('${leaderboards[0]}', 1)`;
-    for(let i=1; i<leaderboards.length; i++) { values += `,('${leaderboards[i]}', ${i+1})` }
+    for(let i=1; i<leaderboards.length; i++) { values += `,('${leaderboards[i]}', ${i+1})`; }
     query = `UPDATE users AS t SET latest_rank = c.latest_rank FROM (VALUES ${values}) AS c(userid, latest_rank) WHERE c.userid=t.userid`;
     await config.pquery(query);
 }
