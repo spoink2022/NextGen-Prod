@@ -41,6 +41,9 @@ async function sendPick(msg) {
         chartData2[chartData2.length-1].y = stockPickUser.buy_price2;
         if(chartData2[0].t < (new Date(quote2.latestUpdate)).getTime()) { chartData2.unshift({t: new Date((new Date(quote2.latestUpdate)).getTime()), y: quote2.price}); }
 
+        console.log(chartData);
+        console.log(chartData2);
+
         let up = calc.percentChange(stockPickUser.buy_price, quote.price) >= 0, up2 = calc.percentChange(stockPickUser.buy_price2, quote2.price) >= 0;
         const graphCanvas = await create.canvas.event.stockPickGraph(chartData, chartData2, up, up2, stockPickUser.pick, stockPickUser.pick2);
         const attachment = new MessageAttachment(graphCanvas, `${stockPickUser.pick}.png`);
