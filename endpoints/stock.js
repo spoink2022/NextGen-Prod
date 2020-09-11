@@ -18,7 +18,8 @@ module.exports.getQuote = async function(ticker) {
             volume: json.avgTotalVolume,
             marketcap: json.marketCap,
             exchange: json.primaryExchange,
-            latestUpdate: json.latestUpdate
+            latestUpdate: json.latestUpdate,
+            previousClose: json.previousClose
         };
     }).catch(err => { return null; });
 }
@@ -27,7 +28,7 @@ module.exports.getLogoUrl = function(ticker) {
     return `https://storage.googleapis.com/iex/api/logos/${ticker.toUpperCase()}.png`;
 }
 
-module.exports.getPrices = async function(tickers) { // includes company name
+module.exports.getPrices = async function(tickers) { // includes company name + open
     let tickersString = tickers.reduce((a, b) => a + ',' + b, '');
     let response = await fetch(`https://cloud.iexapis.com/stable/stock/market/batch?symbols=${tickersString}&types=quote&token=${keys.IEXCloud}`);
     return response.json().then(json => {
@@ -36,6 +37,7 @@ module.exports.getPrices = async function(tickers) { // includes company name
             res[key] = {};
             res[key].price = val.quote.latestPrice;
             res[key].companyName = val.quote.companyName;
+            res[key].previousClose = val.quote.previousClose;
         }
         return res;
     }).catch(err => { return {}; });

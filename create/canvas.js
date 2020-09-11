@@ -70,3 +70,72 @@ module.exports.cryptoGraph = async function(symbol, data, up) {
     }
     return await renderCryptoInfo(configuration);
 }
+
+module.exports.event = {};
+module.exports.event.stockPickGraph = async function(chartData, chartData2, up, up2, ticker, ticker2) {
+    const configuration = {
+        type: 'line',
+        data: {
+            datasets: [{
+                label: null,
+                pointBorderColor: 'rgba(0, 0, 0, 0)',
+                pointBackgroundColor: 'rgba(0, 0, 0, 0)',
+                borderWidth: 3,
+                lineTension: 0.1,
+                data: null
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    type: "time",
+                    time: {
+                        unit: 'day'
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
+                    },
+                    gridLines: {
+                        color: 'rgba(128, 128, 128, 0.2)'
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Price ($)'
+                    },
+                    ticks: {
+                        beginAtZero: false,
+                        callback: (value) => format.floatValue(value, 6, false)
+                    },
+                    gridLines: {
+                        color: 'rgba(128, 128, 128, 0.2)'
+                    }
+                }],
+            }
+        }
+    }
+    const canvas = createCanvas(900, 780);
+    const ctx = canvas.getContext('2d');
+
+    let c = configuration;
+    c.data.datasets[0].data = chartData;
+    c.data.datasets[0].borderColor = up ? 'rgba(0, 255, 0, 0.5)' : 'rgba(255, 0, 0, 0.5)';
+    c.data.datasets[0].label = ticker + ' share value';
+    const graph1 = await loadImage(await renderCryptoInfo(c));
+    ctx.drawImage(graph1, 0, 20, canvas.width, 340);
+    ctx.font = '40px Arial';
+    ctx.fillStyle = '#dddddd';
+    ctx.fillText(ticker, 90, 35);
+
+    c = configuration;
+    c.data.datasets[0].data = chartData2;
+    c.data.datasets[0].borderColor = up2 ? 'rgba(0, 255, 0, 0.5)' : 'rgba(255, 0, 0, 0.5)';
+    c.data.datasets[0].label = ticker2 + ' share value';
+    const graph2 = await loadImage(await renderCryptoInfo(c));
+    ctx.drawImage(graph2, 0, canvas.height/2 + 20, canvas.width, 340);
+    ctx.fillText(ticker2, 90, canvas.height/2 + 35);
+
+    return canvas.toBuffer();
+}

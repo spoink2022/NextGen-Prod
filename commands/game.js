@@ -23,8 +23,7 @@ module.exports.run = async function(cmd, args, msg) {
     if(cmdIs(cmd, 'init')) {
         sendInit(msg, user);
     } else if(user.tutorial === 'init') {
-        msg.reply('**No Account**\nYou don\'t have an account yet! Create one with `' + config.prefix + 'init`');
-        return;
+        msg.reply('**No Account**\nYou don\'t have an account yet! Create one with `' + config.prefix + 'init`'); return;
     }
     
     if(cmdIs(cmd, 'balance')) {

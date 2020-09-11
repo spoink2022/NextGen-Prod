@@ -23,5 +23,7 @@
         "member" : "#3498db",
         "tester" : "#e91e63",
         "admin" : "#daa520"
-    }
+    },
+    "stockpick1": "#143d59",
+    "stockpick2": "#f4b41a"
 }

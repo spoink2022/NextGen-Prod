@@ -5,7 +5,12 @@
         "analytics": [],
         "getdaily": [],
         "setdaily": [],
-        "leaderboards": []  
+        "leaderboards": [],
+        "stockpick.setbuyprices": [],
+        "stockpick.leaderboards": []
+    },
+    "event": {
+        "pick": []
     },
     "lee": {
         "articles": ["news"]
