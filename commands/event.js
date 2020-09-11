@@ -35,11 +35,11 @@ async function sendPick(msg) {
 
         const chartData = await endpoints.event.getChartDataStockPick(stockPickUser.pick, stockPickUser.day);
         chartData[chartData.length-1].y = stockPickUser.buy_price;
-        if(chartData[0].t < (new Date(quote.latestUpdate)).getTime()) { chartData.unshift({t: new Date((new Date(quote.latestUpdate)).getTime()), y: quote.price}); }
+        if(chartData[0].t < quote.latestUpdate) { chartData.unshift({t: quote.latestUpdate, y: quote.price}); }
 
         const chartData2 = await endpoints.event.getChartDataStockPick(stockPickUser.pick2, stockPickUser.day);
         chartData2[chartData2.length-1].y = stockPickUser.buy_price2;
-        if(chartData2[0].t < (new Date(quote2.latestUpdate)).getTime()) { chartData2.unshift({t: new Date((new Date(quote2.latestUpdate)).getTime()), y: quote2.price}); }
+        if(chartData2[0].t < quote2.latestUpdate) { chartData2.unshift({t: quote2.latestUpdate, y: quote2.price}); }
 
         console.log(chartData);
         console.log(chartData2);
