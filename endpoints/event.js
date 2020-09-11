@@ -27,7 +27,10 @@ module.exports.getChartDataStockPick = async function(ticker, startDay) {
         return response.json().then(iexJson => {
             let latestAlphavantageDate = json[0] ? json[0].t : 0;
             for(const obj of iexJson) {
-                let entry = {t: (new Date(`${obj.date} ${obj.minute}`)).getTime(), y: obj.close};
+                if(!obj.close) { continue; }
+                let year = obj.date.split('-')[0], month=parseInt(obj.date.split('-')[1])-1, day = obj.date.split('-')[2];
+                let hour = obj.minute.split(':')[0], minute = obj.minute.split(':')[1];
+                let entry = {t: Date.UTC(year, month, day, hour, minute, 0), y: obj.close};
                 if(parseInt(entry.t) >= latestAlphavantageDate) {
                     json.unshift(entry);
                 }
