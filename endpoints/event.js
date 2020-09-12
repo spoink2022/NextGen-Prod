@@ -10,7 +10,7 @@ function getOne(arr) {
 module.exports.getChartDataStockPick = async function(ticker, startDay) {
     const key = getOne(keys.alphavantage);
     console.log(key);
-    let response = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${ticker}&interval=60min&outputsize=full&apikey=${key}&datatype=csv`);
+    let response = await fetch(`https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${ticker.replace('.', '-')}&interval=60min&outputsize=full&apikey=${key}&datatype=csv`);
     return response.text().then(async(text) => {
         let startDate = (new Date(startDay)).getTime();
         try { var json = await parse(text, {
