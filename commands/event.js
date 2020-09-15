@@ -4,6 +4,7 @@ const create = require('../create');
 const db = require('../db');
 const endpoints = require('../endpoints');
 const calc = require('../lib/calc.js');
+const datetime = require('../lib/datetime.js');
 
 const commands = require('../static').commands.event;
 
@@ -34,12 +35,20 @@ async function sendPick(msg) {
         let embed = sentMessage.embeds[0];
 
         const chartData = await endpoints.event.getChartDataStockPick(stockPickUser.pick, stockPickUser.day);
-        chartData[chartData.length-1].y = stockPickUser.buy_price;
-        if(chartData[0].t < quote.latestUpdate) { chartData.unshift({t: quote.latestUpdate, y: quote.price}); }
+        if(chartData[0]) {
+            chartData[chartData.length-1].y = stockPickUser.buy_price;
+        } else {
+            chartData.push({t: datetime.epochToEpochEST((new Date(stockPickUser.day)).getTime()), y: stockPickUser.buy_price});
+        }
+        if(!chartData[0] || chartData[0].t < quote.latestUpdate) { chartData.unshift({t: quote.latestUpdate, y: quote.price}); }
 
         const chartData2 = await endpoints.event.getChartDataStockPick(stockPickUser.pick2, stockPickUser.day);
-        chartData2[chartData2.length-1].y = stockPickUser.buy_price2;
-        if(chartData2[0].t < quote2.latestUpdate) { chartData2.unshift({t: quote2.latestUpdate, y: quote2.price}); }
+        if(chartData2[0]) {
+            chartData2[chartData2.length-1].y = stockPickUser.buy_price2;
+        } else {
+            chartData2.push({t: datetime.epochToEpochEST((new Date(stockPickUser.day)).getTime()), y: stockPickUser.buy_price2});
+        }
+        if(!chartData2[0] || chartData2[0].t < quote2.latestUpdate) { chartData2.unshift({t: quote2.latestUpdate, y: quote2.price}); }
 
         let up = calc.percentChange(stockPickUser.buy_price, quote.price) >= 0, up2 = calc.percentChange(stockPickUser.buy_price2, quote2.price) >= 0;
         const graphCanvas = await create.canvas.event.stockPickGraph(chartData, chartData2, up, up2, stockPickUser.pick, stockPickUser.pick2);
