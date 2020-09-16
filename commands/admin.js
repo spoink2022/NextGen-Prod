@@ -143,5 +143,5 @@ module.exports.stockPick.sendLeaderboards = async function(msg) {
     db.event.updateLatestRank(leaderboards.map(a => a.userid));
     const embed = await create.eventEmbed.leaderboards(leaderboards.splice(0, TO_SHOW));
     const channel = msg.mentions.channels.first() || msg.channel;
-    channel.send('<@754856363938545735>', embed);
+    channel.send('<@&754856363938545735>', embed);
 }
