@@ -55,6 +55,7 @@ async function sendPassport(msg) {
     let joinDate = new Date(user.day_joined);
     let text = {
         profile: `Date Joined: ${datetime.epochToDateJoined(joinDate.getTime())}
+        Competitions Attended: ${user.comp_attended}
         Awards: ${':first_place:'.repeat(user.first)}${':second_place:'.repeat(user.second)}${':third_place:'.repeat(user.third)}`,
         investingGame: `Latest Rank: ${user.latest_rank===0 ? 'Unranked' : datetime.rankFormat(user.latest_rank)}
         Transactions: ${user.transactions}
