@@ -45,6 +45,7 @@ module.exports.getPrices = async function(symbols) { // includes currency name
 }
 
 module.exports.getChartData = async function(coinName) {
+    console.log(coinName);
     let response = await fetch(`https://api.coingecko.com/api/v3/coins/${coinName}/market_chart?vs_currency=usd&days=365`);
     return response.json().then(json => {
         return json.prices;

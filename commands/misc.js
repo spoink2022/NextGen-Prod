@@ -52,7 +52,10 @@ async function sendPassport(msg) {
         rolesString += `- ${role.name}\n`;
         roleNames.push(role.name);
     }
+    let joinDate = new Date(user.day_joined);
     let text = {
+        profile: `Date Joined: ${datetime.epochToDateJoined(joinDate.getTime())}
+        Awards: ${':first_place:'.repeat(user.first)}${':second_place:'.repeat(user.second)}${':third_place:'.repeat(user.third)}`,
         investingGame: `Latest Rank: ${user.latest_rank===0 ? 'Unranked' : datetime.rankFormat(user.latest_rank)}
         Transactions: ${user.transactions}
         Tutorial Status: ${user.tutorial==='complete' ? 'Complete' : `Incomplete (next: ${user.tutorial})`}`,
