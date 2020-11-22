@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const parse = require('csv-parse/lib/sync');
 
 const keys = require('../private/keys.json');
+const calc = require('../lib/calc.js');
 const datetime = require('../lib/datetime.js');
 
 function getOne(arr) {
@@ -39,4 +40,20 @@ module.exports.getChartDataStockPick = async function(ticker, startDay) {
         });
     });
     //response = 
+}
+
+module.exports.getChartDataCryptoPick = async function(coinName, startDay) {
+    let response = await fetch(`https://api.coingecko.com/api/v3/coins/${coinName}/market_chart?vs_currency=usd&days=90`);
+    let year = startDay.split('-')[0], month=parseInt(startDay.split('-')[1])-1, day = startDay.split('-')[2];
+    let startDate = Date.UTC(year, month, day, 0, 0, 0);
+
+    let json = (await response.json()).prices;
+    json = json.filter(function(tuple) {
+        return tuple[0] >= startDate;
+    });
+    json = json.map(tuple => {
+        return {t: tuple[0], y: calc.percentChange(json[0][1], tuple[1])};
+    });
+
+    return json;
 }
