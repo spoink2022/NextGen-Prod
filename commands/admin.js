@@ -29,10 +29,14 @@ module.exports.run = function(cmd, args, msg) {
         sendSetDaily(msg, args);
     } else if(cmdIs(cmd, 'leaderboards')) {
         this.sendLeaderboards(msg);
-    } else if(cmdIs(cmd, 'stockpick.setbuyprices')) {
+    } /*else if(cmdIs(cmd, 'stockpick.setbuyprices')) {
         this.stockPick.setBuyPrices(msg);
     } else if(cmdIs(cmd, 'stockpick.leaderboards')) {
         this.stockPick.sendLeaderboards(msg);
+    }*/else if(cmdIs(cmd, 'cryptopick.setbuyprices')) {
+        this.cryptoPick.setBuyPrices(msg);
+    } else if(cmdIs(cmd, 'cryptopick.leaderboards')) {
+        this.cryptoPick.sendLeaderboards(msg);
     }
 }
 
@@ -142,6 +146,55 @@ module.exports.stockPick.sendLeaderboards = async function(msg) {
     }
     db.event.updateLatestRank(leaderboards.map(a => a.userid));
     const embed = await create.eventEmbed.leaderboards(leaderboards.splice(0, TO_SHOW));
+    const channel = msg.mentions.channels.first() || msg.channel;
+    channel.send('<@&754856363938545735>', embed);
+}
+
+// CRYPTO PICK
+module.exports.cryptoPick = {};
+module.exports.cryptoPick.setBuyPrices = async function(msg) {
+    let cryptosPicked = (await db.event.fetchCryptosPicked()).map(obj => obj.pick);
+    let prices = await endpoints.crypto.getPrices(cryptosPicked);
+    await db.event.setCryptoBuyPrices(prices, '');
+    let cryptosPicked2 = (await db.event.fetchCryptosPicked2()).map(obj => obj.pick2);
+    let prices2 = await endpoints.crypto.getPrices(cryptosPicked2);
+    await db.event.setCryptoBuyPrices(prices2, '2');
+    let cryptosPicked3 = (await db.event.fetchCryptosPicked3()).map(obj => obj.pick3);
+    let prices3 = await endpoints.crypto.getPrices(cryptosPicked3);
+    await db.event.setCryptoBuyPrices(prices3, '3');
+    msg.reply('set buy prices');
+}
+module.exports.cryptoPick.sendLeaderboards = async function(msg) {
+    const guild = await globals.client.guilds.fetch(config.nextgenServer);
+    const users = await db.event.fetchCryptoPickUsers();
+    let cryptosPicked = [], allRankings = [];
+    for(const user of users) {
+        if(!cryptosPicked[user.pick]) { cryptosPicked.push(user.pick); }
+        if(!cryptosPicked[user.pick2]) { cryptosPicked.push(user.pick2); }
+        if(!cryptosPicked[user.pick3]) { cryptosPicked.push(user.pick3); }
+    }
+    const prices = await endpoints.crypto.getPrices(cryptosPicked);
+    for(const user of users) {
+        allRankings.push({
+            userid: user.userid,
+            pick: user.pick,
+            pick2: user.pick2,
+            pick3: user.pick3,
+            percentageGain: calc.percentChange(parseFloat(user.buy_price), prices[user.pick].price),
+            percentageGain2: calc.percentChange(parseFloat(user.buy_price2), prices[user.pick2].price),
+            percentageGain3: calc.percentChange(parseFloat(user.buy_price3), prices[user.pick3].price)
+        });
+    }
+    allRankings.sort((a, b) => a.percentageGain+a.percentageGain2+a.percentageGain3 > b.percentageGain+b.percentageGain2+b.percentageGain3 ? -1 : 1);
+    let TO_SHOW = 3, leaderboards = [];
+    for(user of allRankings) {
+        try { var guildMember = (await guild.members.fetch(user.userid)); }
+        catch { continue; } // member not in guild
+        user.name = guildMember.user.tag;
+        leaderboards.push(user);
+    }
+    db.event.cryptoPickUpdateLatestRank(leaderboards.map(a => a.userid));
+    const embed = await create.eventEmbed.cryptoPickLeaderboards(leaderboards.splice(0, TO_SHOW));
     const channel = msg.mentions.channels.first() || msg.channel;
     channel.send('<@&754856363938545735>', embed);
 }

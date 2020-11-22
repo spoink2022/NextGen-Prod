@@ -14,7 +14,8 @@ module.exports.contains = function(cmd) {
 
 module.exports.run = async function(cmd, args, msg) {
     if(cmdIs(cmd, 'pick')) {
-        sendPick(msg);
+        //sendPick(msg);
+        sendCryptoPick(msg);
     }
 }
 
@@ -55,6 +56,31 @@ async function sendPick(msg) {
         const attachment = new MessageAttachment(graphCanvas, `${stockPickUser.pick}.png`);
         embed.attachFiles(attachment);
         embed.setImage(`attachment://${stockPickUser.pick}.png`);
+        embed.setFooter('');
+        await sentMessage.delete();
+        msg.channel.send(embed);
+    });
+}
+
+async function sendCryptoPick(msg) {
+    let cryptoPickUser = await db.event.fetchCryptoPickUser(msg.author.id);
+    let c = cryptoPickUser;
+    if(!cryptoPickUser) { // user not signed up, therefore command empty
+        return;
+    }
+    let quotes = await endpoints.crypto.getPrices([c.pick, c.pick2, c.pick3]);
+    const embed = await create.eventEmbed.cryptoPick(msg.author, c, quotes[c.pick], quotes[c.pick2], quotes[c.pick3]);
+    msg.channel.send(embed).then(async(sentMessage) => {
+        let embed = sentMessage.embeds[0];
+
+        const chartData = await endpoints.event.getChartDataCryptoPick(quotes[c.pick].name.toLowerCase(), c.day);
+        const chartData2 = await endpoints.event.getChartDataCryptoPick(quotes[c.pick2].name.toLowerCase(), c.day);
+        const chartData3 = await endpoints.event.getChartDataCryptoPick(quotes[c.pick3].name.toLowerCase(), c.day);
+
+        const graphCanvas = await create.canvas.event.cryptoPickGraph(chartData, chartData2, chartData3, c.pick, c.pick2, c.pick3);
+        const attachment = new MessageAttachment(graphCanvas, `${cryptoPickUser.pick}.png`);
+        embed.attachFiles(attachment);
+        embed.setImage(`attachment://${cryptoPickUser.pick}.png`);
         embed.setFooter('');
         await sentMessage.delete();
         msg.channel.send(embed);

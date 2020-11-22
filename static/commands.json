@@ -7,7 +7,9 @@
         "setdaily": [],
         "leaderboards": [],
         "stockpick.setbuyprices": [],
-        "stockpick.leaderboards": []
+        "stockpick.leaderboards": [],
+        "cryptopick.setbuyprices": [],
+        "cryptopick.leaderboards": []
     },
     "event": {
         "pick": []

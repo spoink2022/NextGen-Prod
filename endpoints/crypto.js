@@ -39,6 +39,7 @@ module.exports.getPrices = async function(symbols) { // includes currency name
             res[val.id] = {};
             res[val.id].price = parseFloat(val.price);
             res[val.id].name = val.name;
+            res[val.id].change1D = parseFloat(val['1d'].price_change_pct);
         }
         return res;
     }).catch(err => { return {}; });

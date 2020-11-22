@@ -25,5 +25,6 @@
         "admin" : "#daa520"
     },
     "stockpick1": "#143d59",
-    "stockpick2": "#f4b41a"
+    "stockpick2": "#f4b41a",
+    "cryptoPick": "#00b5ec"
 }
