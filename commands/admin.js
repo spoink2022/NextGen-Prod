@@ -196,5 +196,5 @@ module.exports.cryptoPick.sendLeaderboards = async function(msg) {
     db.event.cryptoPickUpdateLatestRank(leaderboards.map(a => a.userid));
     const embed = await create.eventEmbed.cryptoPickLeaderboards(leaderboards.splice(0, TO_SHOW));
     const channel = msg.mentions.channels.first() || msg.channel;
-    channel.send('<@&754856363938545735>', embed);
+    channel.send('<@&781294527133909013>', embed);
 }
