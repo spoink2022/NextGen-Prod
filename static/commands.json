@@ -32,7 +32,8 @@
     "lookup": {
         "stock": ["s"],
         "crypto": ["c"],
-        "search": []
+        "search": [],
+        "event": ["e"]
     },
     "misc": {
         "ping": ["p"],

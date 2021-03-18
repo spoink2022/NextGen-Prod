@@ -14,6 +14,8 @@ module.exports.run = function(cmd, args, msg) {
         sendCrypto(msg, args);
     } else if(cmdIs(cmd, 'search')) {
         sendSearch(msg, args);
+    } else if(cmdIs(cmd, 'event')) {
+        sendEvent(msg);
     }
 }
 
@@ -65,4 +67,8 @@ async function sendSearch(msg, args) {
     }
     const embed = await create.embed.stockSearch(searchResults);
     msg.channel.send(embed);
+}
+
+async function sendEvent(msg) {
+    msg.channel.send('https://forms.gle/2M5xug9K5DGk54cV8');
 }
