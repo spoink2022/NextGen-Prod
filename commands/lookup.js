@@ -70,5 +70,5 @@ async function sendSearch(msg, args) {
 }
 
 async function sendEvent(msg) {
-    msg.channel.send('https://forms.gle/2M5xug9K5DGk54cV8');
+    msg.channel.send('https://forms.gle/42B77zC8986mMs2TA');
 }
